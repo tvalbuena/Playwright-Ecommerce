@@ -197,9 +197,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-015 — Cancel en resumen regresa al carrito
+  // CP-015 — Cancel en resumen regresa al inventario
   // ─────────────────────────────────────────────────────
-  test('CP-015 - Cancel en resumen regresa al carrito', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-015 - Cancel en resumen regresa al inventario', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -211,8 +211,7 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await checkoutPage.clickContinuar();
     await checkoutPage.validarResumenCargado();
     await checkoutPage.clickCancelarResumen();
-    await checkoutPage.validarRegresaAlCarrito();
-    await carritoPage.validarProductoEnCarrito(productos.backpack.nombre);
+    await checkoutPage.validarRegresaAlInventario();
   });
 
   // ─────────────────────────────────────────────────────

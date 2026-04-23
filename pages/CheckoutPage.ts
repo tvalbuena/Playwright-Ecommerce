@@ -116,6 +116,11 @@ export class CheckoutPage {
     await expect(this.page).toHaveURL(/cart/);
   }
 
+  // 🔹 Validar que cancelar desde resumen regresa al inventario
+  async validarRegresaAlInventario() {
+    await expect(this.page).toHaveURL(/inventory/);
+  }
+
   // 🔹 Validar que permanece en el formulario
   async validarPermanenceEnFormulario() {
     await expect(this.page).toHaveURL(/checkout-step-one/);
