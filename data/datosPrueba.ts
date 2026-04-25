@@ -55,6 +55,29 @@ export const productos = {
   }
 };
 
+export const ordenamiento = {
+  nombreAZ: {
+    opcion:       'Name (A to Z)',
+    primerNombre: 'Sauce Labs Backpack',
+    ultimoNombre: 'Test.allTheThings() T-Shirt (Red)'
+  },
+  nombreZA: {
+    opcion:       'Name (Z to A)',
+    primerNombre: 'Test.allTheThings() T-Shirt (Red)',
+    ultimoNombre: 'Sauce Labs Backpack'
+  },
+  precioAscendente: {
+    opcion:        'Price (low to high)',
+    primerPrecio:  '$7.99',
+    ultimoPrecio:  '$49.99'
+  },
+  precioDescendente: {
+    opcion:        'Price (high to low)',
+    primerPrecio:  '$49.99',
+    ultimoPrecio:  '$7.99'
+  }
+};
+
 export const resumenPedido = {
   paymentInfo:  'SauceCard #31337',
   shippingInfo: 'Free Pony Express Delivery!',

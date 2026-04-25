@@ -1,5 +1,5 @@
-import { test } from './fixtures';
-import { usuarios, datosCheckout, productos, resumenPedido } from '../data/datosPrueba';
+import { test, expect } from './fixtures';
+import { usuarios, datosCheckout, productos, resumenPedido, ordenamiento } from '../data/datosPrueba';
 
 test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
 
@@ -106,6 +106,42 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await inventarioPage.validarContadorDesaparecio();
     await detalleProductoPage.clickBackToProducts();
     await inventarioPage.validarInventarioCargado();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-022 — Ordenar Name (A to Z)
+  // ─────────────────────────────────────────────────────
+  test('CP-022 - Ordenar productos por nombre A to Z', async ({ autenticado: _autenticado, inventarioPage }) => {
+    await inventarioPage.seleccionarFiltro(ordenamiento.nombreAZ.opcion);
+    expect(await inventarioPage.obtenerPrimerNombreProducto()).toBe(ordenamiento.nombreAZ.primerNombre);
+    expect(await inventarioPage.obtenerUltimoNombreProducto()).toBe(ordenamiento.nombreAZ.ultimoNombre);
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-023 — Ordenar Name (Z to A)
+  // ─────────────────────────────────────────────────────
+  test('CP-023 - Ordenar productos por nombre Z to A', async ({ autenticado: _autenticado, inventarioPage }) => {
+    await inventarioPage.seleccionarFiltro(ordenamiento.nombreZA.opcion);
+    expect(await inventarioPage.obtenerPrimerNombreProducto()).toBe(ordenamiento.nombreZA.primerNombre);
+    expect(await inventarioPage.obtenerUltimoNombreProducto()).toBe(ordenamiento.nombreZA.ultimoNombre);
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-024 — Ordenar Price (low to high)
+  // ─────────────────────────────────────────────────────
+  test('CP-024 - Ordenar productos por precio de menor a mayor', async ({ autenticado: _autenticado, inventarioPage }) => {
+    await inventarioPage.seleccionarFiltro(ordenamiento.precioAscendente.opcion);
+    expect(await inventarioPage.obtenerPrimerPrecioProducto()).toBe(ordenamiento.precioAscendente.primerPrecio);
+    expect(await inventarioPage.obtenerUltimoPrecioProducto()).toBe(ordenamiento.precioAscendente.ultimoPrecio);
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-025 — Ordenar Price (high to low)
+  // ─────────────────────────────────────────────────────
+  test('CP-025 - Ordenar productos por precio de mayor a menor', async ({ autenticado: _autenticado, inventarioPage }) => {
+    await inventarioPage.seleccionarFiltro(ordenamiento.precioDescendente.opcion);
+    expect(await inventarioPage.obtenerPrimerPrecioProducto()).toBe(ordenamiento.precioDescendente.primerPrecio);
+    expect(await inventarioPage.obtenerUltimoPrecioProducto()).toBe(ordenamiento.precioDescendente.ultimoPrecio);
   });
 
   // ─────────────────────────────────────────────────────

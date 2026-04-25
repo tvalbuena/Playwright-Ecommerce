@@ -54,4 +54,24 @@ export class InventarioPage {
   async clickNombreProducto(nombre: string) {
     await this.page.locator('.inventory_item_name').getByText(nombre).click();
   }
+
+  async seleccionarFiltro(opcion: string) {
+    await this.page.locator('.product_sort_container').selectOption({ label: opcion });
+  }
+
+  async obtenerPrimerNombreProducto(): Promise<string> {
+    return (await this.page.locator('.inventory_item_name').first().textContent()) || '';
+  }
+
+  async obtenerUltimoNombreProducto(): Promise<string> {
+    return (await this.page.locator('.inventory_item_name').last().textContent()) || '';
+  }
+
+  async obtenerPrimerPrecioProducto(): Promise<string> {
+    return (await this.page.locator('.inventory_item_price').first().textContent()) || '';
+  }
+
+  async obtenerUltimoPrecioProducto(): Promise<string> {
+    return (await this.page.locator('.inventory_item_price').last().textContent()) || '';
+  }
 }
