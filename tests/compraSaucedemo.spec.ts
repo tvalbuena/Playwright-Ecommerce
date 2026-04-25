@@ -1,5 +1,5 @@
 import { test } from './fixtures';
-import { usuarios, datosCheckout, productos } from '../data/datosPrueba';
+import { usuarios, datosCheckout, productos, resumenPedido } from '../data/datosPrueba';
 
 test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
 
@@ -79,9 +79,39 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-008 — Compra E2E completa
+  // CP-008 — Inventario navega al detalle sin agregar al carrito
   // ─────────────────────────────────────────────────────
-  test('CP-008 - Compra E2E completa de punta a punta', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage, confirmacionPage }) => {
+  test('CP-008 - Inventario navega al detalle del producto sin agregar al carrito', async ({ autenticado: _autenticado, inventarioPage, detalleProductoPage }) => {
+    await inventarioPage.clickNombreProducto(productos.backpack.nombre);
+    await detalleProductoPage.validarURLDetalle();
+    await detalleProductoPage.validarNombreProducto(productos.backpack.nombre);
+    await detalleProductoPage.validarPrecioProducto(productos.backpack.precio);
+    await detalleProductoPage.validarBotonAddToCartVisible();
+    await detalleProductoPage.clickAddToCart();
+    await detalleProductoPage.validarBotonRemoveVisible();
+    await inventarioPage.validarContadorCarrito('1');
+    await detalleProductoPage.clickBackToProducts();
+    await inventarioPage.validarInventarioCargado();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-009 — Inventario navega al detalle producto ya en carrito
+  // ─────────────────────────────────────────────────────
+  test('CP-009 - Inventario navega al detalle del producto ya agregado al carrito', async ({ autenticado: _autenticado, inventarioPage, detalleProductoPage }) => {
+    await inventarioPage.agregarProducto(productos.backpack.nombre);
+    await inventarioPage.clickNombreProducto(productos.backpack.nombre);
+    await detalleProductoPage.validarURLDetalle();
+    await detalleProductoPage.validarBotonRemoveVisible();
+    await detalleProductoPage.clickRemove();
+    await inventarioPage.validarContadorDesaparecio();
+    await detalleProductoPage.clickBackToProducts();
+    await inventarioPage.validarInventarioCargado();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-010 — Compra E2E completa
+  // ─────────────────────────────────────────────────────
+  test('CP-010 - Compra E2E completa de punta a punta', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage, confirmacionPage }) => {
     // Inventario — agregar productos
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.agregarProducto(productos.bikeLight.nombre);
@@ -92,6 +122,8 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await carritoPage.validarCarritoCargado();
     await carritoPage.validarProductoEnCarrito(productos.backpack.nombre);
     await carritoPage.validarProductoEnCarrito(productos.bikeLight.nombre);
+    await carritoPage.validarPrecioProducto(productos.backpack.nombre, productos.backpack.precio);
+    await carritoPage.validarPrecioProducto(productos.bikeLight.nombre, productos.bikeLight.precio);
     await carritoPage.validarCantidadProductos(2);
     await carritoPage.irAlCheckout();
 
@@ -108,11 +140,14 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await checkoutPage.validarResumenCargado();
     await checkoutPage.validarProductoEnResumen(productos.backpack.nombre);
     await checkoutPage.validarProductoEnResumen(productos.bikeLight.nombre);
+    await checkoutPage.validarPrecioProductoEnResumen(productos.backpack.nombre, productos.backpack.precio);
+    await checkoutPage.validarPrecioProductoEnResumen(productos.bikeLight.nombre, productos.bikeLight.precio);
     await checkoutPage.validarResumenVisible();
-
-    // Resumen — validar precios (Backpack: $29.99 + Bike Light: $9.99 = $39.98 + Tax ~$3.20)
-    await checkoutPage.validarSubtotalAproximado('39.98');
-    await checkoutPage.validarTotalAproximado('43.1');
+    await checkoutPage.validarPaymentInfo(resumenPedido.paymentInfo);
+    await checkoutPage.validarShippingInfo(resumenPedido.shippingInfo);
+    await checkoutPage.validarItemTotal(resumenPedido.itemTotal);
+    await checkoutPage.validarImpuesto(resumenPedido.tax);
+    await checkoutPage.validarTotal(resumenPedido.total);
 
     await checkoutPage.clickFinish();
 
@@ -121,9 +156,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-009 — Checkout todos los campos vacios
+  // CP-011 — Checkout todos los campos vacios
   // ─────────────────────────────────────────────────────
-  test('CP-009 - Checkout con todos los campos vacios', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-011 - Checkout con todos los campos vacios', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -138,9 +173,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-010 — Checkout sin apellido
+  // CP-012 — Checkout sin apellido
   // ─────────────────────────────────────────────────────
-  test('CP-010 - Checkout sin apellido', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-012 - Checkout sin apellido', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -155,9 +190,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-011 — Checkout sin zip code
+  // CP-013 — Checkout sin zip code
   // ─────────────────────────────────────────────────────
-  test('CP-011 - Checkout sin zip code', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-013 - Checkout sin zip code', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -172,9 +207,47 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-013 — Continue Shopping mantiene carrito
+  // CP-014 — Carrito navega al detalle del producto
   // ─────────────────────────────────────────────────────
-  test('CP-013 - Continue Shopping mantiene productos en carrito', async ({ autenticado: _autenticado, inventarioPage, carritoPage }) => {
+  test('CP-014 - Carrito navega al detalle del producto', async ({ autenticado: _autenticado, inventarioPage, carritoPage, detalleProductoPage }) => {
+    await inventarioPage.agregarProducto(productos.backpack.nombre);
+    await inventarioPage.irAlCarrito();
+    await carritoPage.clickNombreProducto(productos.backpack.nombre);
+    await detalleProductoPage.validarURLDetalle();
+    await detalleProductoPage.validarNombreProducto(productos.backpack.nombre);
+    await detalleProductoPage.validarPrecioProducto(productos.backpack.precio);
+    await detalleProductoPage.validarBotonRemoveVisible();
+    await detalleProductoPage.clickBackToProducts();
+    await inventarioPage.validarInventarioCargado();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-015 — Resumen navega al detalle del producto
+  // ─────────────────────────────────────────────────────
+  test('CP-015 - Resumen navega al detalle del producto', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage, detalleProductoPage }) => {
+    await inventarioPage.agregarProducto(productos.backpack.nombre);
+    await inventarioPage.irAlCarrito();
+    await carritoPage.irAlCheckout();
+    await checkoutPage.llenarFormulario(
+      datosCheckout.valido.nombre,
+      datosCheckout.valido.apellido,
+      datosCheckout.valido.cp
+    );
+    await checkoutPage.clickContinuar();
+    await checkoutPage.validarResumenCargado();
+    await checkoutPage.clickNombreProductoEnResumen(productos.backpack.nombre);
+    await detalleProductoPage.validarURLDetalle();
+    await detalleProductoPage.validarNombreProducto(productos.backpack.nombre);
+    await detalleProductoPage.validarPrecioProducto(productos.backpack.precio);
+    await detalleProductoPage.validarBotonRemoveVisible();
+    await detalleProductoPage.clickBackToProducts();
+    await inventarioPage.validarInventarioCargado();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-016 — Continue Shopping mantiene carrito
+  // ─────────────────────────────────────────────────────
+  test('CP-016 - Continue Shopping mantiene productos en carrito', async ({ autenticado: _autenticado, inventarioPage, carritoPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.validarProductoEnCarrito(productos.backpack.nombre);
@@ -185,9 +258,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-014 — Cancel en checkout regresa al carrito
+  // CP-017 — Cancel en checkout regresa al carrito
   // ─────────────────────────────────────────────────────
-  test('CP-014 - Cancel en checkout regresa al carrito con productos', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-017 - Cancel en checkout regresa al carrito con productos', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -197,9 +270,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-015 — Cancel en resumen regresa al inventario
+  // CP-018 — Cancel en resumen regresa al inventario
   // ─────────────────────────────────────────────────────
-  test('CP-015 - Cancel en resumen regresa al inventario', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-018 - Cancel en resumen regresa al inventario', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -215,9 +288,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-016 — Remover producto desde el carrito
+  // CP-019 — Remover producto desde el carrito
   // ─────────────────────────────────────────────────────
-  test('CP-016 - Remover producto desde el carrito', async ({ autenticado: _autenticado, inventarioPage, carritoPage }) => {
+  test('CP-019 - Remover producto desde el carrito', async ({ autenticado: _autenticado, inventarioPage, carritoPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.agregarProducto(productos.bikeLight.nombre);
     await inventarioPage.validarContadorCarrito('2');
@@ -233,9 +306,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-017 — Checkout sin nombre pero con apellido y zip
+  // CP-020 — Checkout sin nombre pero con apellido y zip
   // ─────────────────────────────────────────────────────
-  test('CP-017 - Checkout sin nombre pero con apellido y zip', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+  test('CP-020 - Checkout sin nombre pero con apellido y zip', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();
@@ -250,9 +323,9 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
-  // CP-018 — Back Home regresa al inventario con carrito vacío
+  // CP-021 — Back Home regresa al inventario con carrito vacío
   // ─────────────────────────────────────────────────────
-  test('CP-018 - Back Home regresa al inventario con carrito vacio', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage, confirmacionPage }) => {
+  test('CP-021 - Back Home regresa al inventario con carrito vacio', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage, confirmacionPage }) => {
     await inventarioPage.agregarProducto(productos.backpack.nombre);
     await inventarioPage.irAlCarrito();
     await carritoPage.irAlCheckout();

@@ -54,3 +54,11 @@ export const productos = {
     precio: '$9.99'
   }
 };
+
+export const resumenPedido = {
+  paymentInfo:  'SauceCard #31337',
+  shippingInfo: 'Free Pony Express Delivery!',
+  tax:          'Tax: $3.20',
+  itemTotal:    'Item total: $39.98',
+  total:        'Total: $43.18'
+};

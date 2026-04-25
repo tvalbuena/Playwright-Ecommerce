@@ -4,6 +4,7 @@ import { InventarioPage } from '../pages/InventarioPage';
 import { CarritoPage } from '../pages/CarritoPage';
 import { CheckoutPage } from '../pages/CheckoutPage';
 import { ConfirmacionPage } from '../pages/ConfirmacionPage';
+import { DetalleProductoPage } from '../pages/DetalleProductoPage';
 import { usuarios } from '../data/datosPrueba';
 
 type Fixtures = {
@@ -12,6 +13,7 @@ type Fixtures = {
   carritoPage: CarritoPage;
   checkoutPage: CheckoutPage;
   confirmacionPage: ConfirmacionPage;
+  detalleProductoPage: DetalleProductoPage;
   autenticado: void;
 };
 
@@ -32,6 +34,9 @@ export const test = base.extend<Fixtures>({
   },
   confirmacionPage: async ({ page }, use) => {
     await use(new ConfirmacionPage(page));
+  },
+  detalleProductoPage: async ({ page }, use) => {
+    await use(new DetalleProductoPage(page));
   },
   autenticado: async ({ loginPage }, use) => {
     await loginPage.login(usuarios.valido.usuario, usuarios.valido.password);

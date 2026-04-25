@@ -50,4 +50,8 @@ export class InventarioPage {
   async irAlCarrito() {
     await this.iconoCarrito.click();
   }
+
+  async clickNombreProducto(nombre: string) {
+    await this.page.locator('.inventory_item_name').getByText(nombre).click();
+  }
 }

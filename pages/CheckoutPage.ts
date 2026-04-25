@@ -125,4 +125,40 @@ export class CheckoutPage {
   async validarPermanenceEnFormulario() {
     await expect(this.page).toHaveURL(/checkout-step-one/);
   }
+
+  // 🔹 Navegar al detalle desde el resumen
+  async clickNombreProductoEnResumen(nombre: string) {
+    await this.page.locator('.inventory_item_name').getByText(nombre).click();
+  }
+
+  // 🔹 Validar precio de producto en resumen
+  async validarPrecioProductoEnResumen(nombreProducto: string, precioEsperado: string) {
+    const item = this.page.locator('.cart_item').filter({ hasText: nombreProducto });
+    await expect(item.locator('.inventory_item_price')).toHaveText(precioEsperado);
+  }
+
+  // 🔹 Validar Payment Information
+  async validarPaymentInfo(paymentInfoEsperada: string) {
+    await expect(this.page.getByText(paymentInfoEsperada)).toBeVisible();
+  }
+
+  // 🔹 Validar Shipping Information
+  async validarShippingInfo(shippingInfoEsperada: string) {
+    await expect(this.page.getByText(shippingInfoEsperada)).toBeVisible();
+  }
+
+  // 🔹 Validar item total exacto
+  async validarItemTotal(itemTotalEsperado: string) {
+    await expect(this.subtotal).toHaveText(itemTotalEsperado);
+  }
+
+  // 🔹 Validar impuesto exacto
+  async validarImpuesto(impuestoEsperado: string) {
+    await expect(this.impuesto).toHaveText(impuestoEsperado);
+  }
+
+  // 🔹 Validar total exacto
+  async validarTotal(totalEsperado: string) {
+    await expect(this.total).toHaveText(totalEsperado);
+  }
 }
