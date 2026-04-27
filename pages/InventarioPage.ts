@@ -7,12 +7,27 @@ export class InventarioPage {
   readonly iconoCarrito: Locator;
   readonly contadorCarrito: Locator;
 
+  // 🔹 Menú hamburguesa
+  readonly botonMenu: Locator;
+  readonly botonCerrarMenu: Locator;
+  readonly menuLateral: Locator;
+  readonly enlaceAllItems: Locator;
+  readonly enlaceLogout: Locator;
+  readonly enlaceResetAppState: Locator;
+
   constructor(page: Page) {
     this.page = page;
 
     this.contenedorInventario = page.getByTestId('inventory-container');
     this.iconoCarrito         = page.getByTestId('shopping-cart-link');
     this.contadorCarrito      = page.locator('.shopping_cart_badge');
+
+    this.botonMenu           = page.locator('#react-burger-menu-btn');
+    this.botonCerrarMenu     = page.locator('#react-burger-cross-btn');
+    this.menuLateral         = page.locator('.bm-menu-wrap');
+    this.enlaceAllItems      = page.locator('#inventory_sidebar_link');
+    this.enlaceLogout        = page.locator('#logout_sidebar_link');
+    this.enlaceResetAppState = page.locator('#reset_sidebar_link');
   }
 
   private slug(nombre: string): string {
@@ -73,5 +88,34 @@ export class InventarioPage {
 
   async obtenerUltimoPrecioProducto(): Promise<string> {
     return (await this.page.locator('.inventory_item_price').last().textContent()) || '';
+  }
+
+  // 🔹 Menú hamburguesa
+  async abrirMenu() {
+    await this.botonMenu.click();
+  }
+
+  async cerrarMenu() {
+    await this.botonCerrarMenu.click();
+  }
+
+  async clickAllItems() {
+    await this.enlaceAllItems.click();
+  }
+
+  async clickLogout() {
+    await this.enlaceLogout.click();
+  }
+
+  async clickResetAppState() {
+    await this.enlaceResetAppState.click();
+  }
+
+  async validarMenuVisible() {
+    await expect(this.menuLateral).toHaveAttribute('aria-hidden', 'false');
+  }
+
+  async validarMenuOculto() {
+    await expect(this.menuLateral).toHaveAttribute('aria-hidden', 'true');
   }
 }

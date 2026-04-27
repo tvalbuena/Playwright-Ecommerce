@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures';
-import { usuarios, datosCheckout, productos, resumenPedido, ordenamiento } from '../data/datosPrueba';
+import { usuarios, datosCheckout, productos, resumenPedido, ordenamiento, mensajesError } from '../data/datosPrueba';
 
 test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
 
@@ -142,6 +142,58 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await inventarioPage.seleccionarFiltro(ordenamiento.precioDescendente.opcion);
     expect(await inventarioPage.obtenerPrimerPrecioProducto()).toBe(ordenamiento.precioDescendente.primerPrecio);
     expect(await inventarioPage.obtenerUltimoPrecioProducto()).toBe(ordenamiento.precioDescendente.ultimoPrecio);
+  });
+
+  // ─────────────────────────────────────────────────────
+  // INVENTARIO — Menú hamburguesa
+  // ─────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────
+  // CP-026 — Abrir y cerrar menú hamburguesa
+  // ─────────────────────────────────────────────────────
+  test('CP-026 - Abrir y cerrar menú hamburguesa', async ({ autenticado: _autenticado, inventarioPage }) => {
+    await inventarioPage.abrirMenu();
+    await inventarioPage.validarMenuVisible();
+    await inventarioPage.cerrarMenu();
+    await inventarioPage.validarMenuOculto();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-027 — Logout desde el menú
+  // ─────────────────────────────────────────────────────
+  test('CP-027 - Logout desde el menú hamburguesa cierra la sesión', async ({ autenticado: _autenticado, inventarioPage, loginPage }) => {
+    await inventarioPage.abrirMenu();
+    await inventarioPage.clickLogout();
+    await loginPage.validarPermanenceEnLogin();
+    await expect(loginPage.botonLogin).toBeVisible();
+    await inventarioPage.page.goto('/inventory.html');
+    await loginPage.validarPermanenceEnLogin();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-028 — All Items desde el menú regresa al inventario
+  // ─────────────────────────────────────────────────────
+  test('CP-028 - All Items desde el menú regresa al inventario', async ({ autenticado: _autenticado, inventarioPage, carritoPage }) => {
+    await inventarioPage.agregarProducto(productos.backpack.nombre);
+    await inventarioPage.irAlCarrito();
+    await carritoPage.validarCarritoCargado();
+    await inventarioPage.abrirMenu();
+    await inventarioPage.clickAllItems();
+    await inventarioPage.validarInventarioCargado();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-029 — Reset App State limpia el carrito
+  // ─────────────────────────────────────────────────────
+  test('CP-029 - Reset App State limpia el carrito y restaura botones', async ({ autenticado: _autenticado, inventarioPage }) => {
+    await inventarioPage.agregarProducto(productos.backpack.nombre);
+    await inventarioPage.validarContadorCarrito('1');
+    await inventarioPage.abrirMenu();
+    await inventarioPage.clickResetAppState();
+    await inventarioPage.cerrarMenu();
+    await inventarioPage.validarMenuOculto();
+    await inventarioPage.validarContadorDesaparecio();
+    // BUG CONOCIDO: Reset App State limpia el contador pero no actualiza el botón del producto en la UI
   });
 
   // ─────────────────────────────────────────────────────
@@ -378,6 +430,37 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await confirmacionPage.validarRegresaAlInventario();
 
     await inventarioPage.validarContadorDesaparecio();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // SEGURIDAD — Protección de rutas
+  // ─────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────
+  // CP-030 — Acceder a inventario sin autenticación
+  // ─────────────────────────────────────────────────────
+  test('CP-030 - Acceder a inventario sin autenticación redirige al login', async ({ loginPage }) => {
+    await loginPage.page.goto('/inventory.html');
+    await loginPage.validarPermanenceEnLogin();
+    await loginPage.validarMensajeError(mensajesError.inventarioSinAuth);
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-031 — Acceder al carrito sin autenticación
+  // ─────────────────────────────────────────────────────
+  test('CP-031 - Acceder al carrito sin autenticación redirige al login', async ({ loginPage }) => {
+    await loginPage.page.goto('/cart.html');
+    await loginPage.validarPermanenceEnLogin();
+    await loginPage.validarMensajeError(mensajesError.carritoSinAuth);
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-032 — Acceder al checkout sin autenticación
+  // ─────────────────────────────────────────────────────
+  test('CP-032 - Acceder al checkout sin autenticación redirige al login', async ({ loginPage }) => {
+    await loginPage.page.goto('/checkout-step-one.html');
+    await loginPage.validarPermanenceEnLogin();
+    await loginPage.validarMensajeError(mensajesError.checkoutSinAuth);
   });
 
 });

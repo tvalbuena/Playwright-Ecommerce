@@ -85,3 +85,9 @@ export const resumenPedido = {
   itemTotal:    'Item total: $39.98',
   total:        'Total: $43.18'
 };
+
+export const mensajesError = {
+  inventarioSinAuth: "You can only access '/inventory.html' when you are logged in.",
+  carritoSinAuth:    "You can only access '/cart.html' when you are logged in.",
+  checkoutSinAuth:   "You can only access '/checkout-step-one.html' when you are logged in."
+};
