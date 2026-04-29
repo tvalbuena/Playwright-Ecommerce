@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures';
-import { usuarios, datosCheckout, productos, resumenPedido, ordenamiento, mensajesError } from '../data/datosPrueba';
+import { usuarios, datosCheckout, productos, resumenPedido, ordenamiento, mensajesError, resumenCarritoVacio } from '../data/datosPrueba';
 
 test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
 
@@ -64,6 +64,20 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await loginPage.login(usuarios.valido.usuario, '');
     await loginPage.validarPermanenceEnLogin();
     await loginPage.validarMensajeError('Password is required');
+  });
+
+  // ─────────────────────────────────────────────────────
+  // LOGIN — Cerrar error
+  // ─────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────
+  // CP-035 — Cerrar mensaje de error en login con botón X
+  // ─────────────────────────────────────────────────────
+  test('CP-035 - Cerrar mensaje de error en login con botón X', async ({ loginPage }) => {
+    await loginPage.login('', '');
+    await loginPage.validarMensajeError('Username is required');
+    await loginPage.clickCerrarError();
+    await loginPage.validarErrorDesaparecio();
   });
 
   // ─────────────────────────────────────────────────────
@@ -295,6 +309,23 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   });
 
   // ─────────────────────────────────────────────────────
+  // CHECKOUT — Cerrar error
+  // ─────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────
+  // CP-036 — Cerrar mensaje de error en checkout con botón X
+  // ─────────────────────────────────────────────────────
+  test('CP-036 - Cerrar mensaje de error en checkout con botón X', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage }) => {
+    await inventarioPage.agregarProducto(productos.backpack.nombre);
+    await inventarioPage.irAlCarrito();
+    await carritoPage.irAlCheckout();
+    await checkoutPage.clickContinuar();
+    await checkoutPage.validarMensajeError('First Name is required');
+    await checkoutPage.clickCerrarError();
+    await checkoutPage.validarErrorDesaparecio();
+  });
+
+  // ─────────────────────────────────────────────────────
   // CP-014 — Carrito navega al detalle del producto
   // ─────────────────────────────────────────────────────
   test('CP-014 - Carrito navega al detalle del producto', async ({ autenticado: _autenticado, inventarioPage, carritoPage, detalleProductoPage }) => {
@@ -391,6 +422,42 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
 
     await carritoPage.removerProducto(productos.bikeLight.nombre);
     await carritoPage.validarCarritoVacio();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CARRITO — Carrito vacío
+  // ─────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────
+  // CP-033 — Carrito vacío muestra estado correcto
+  // ─────────────────────────────────────────────────────
+  test('CP-033 - Carrito vacío muestra estado correcto', async ({ autenticado: _autenticado, inventarioPage, carritoPage }) => {
+    await inventarioPage.irAlCarrito();
+    await carritoPage.validarCarritoCargado();
+    await carritoPage.validarCarritoVacioVisible();
+    await carritoPage.validarBotonCheckoutVisible();
+    await expect(carritoPage.botonContinuarComprando).toBeVisible();
+  });
+
+  // ─────────────────────────────────────────────────────
+  // CP-034 — Checkout con carrito vacío (bug documentado)
+  // ─────────────────────────────────────────────────────
+  test('CP-034 - Checkout con carrito vacío (bug documentado)', async ({ autenticado: _autenticado, inventarioPage, carritoPage, checkoutPage, confirmacionPage }) => {
+    // BUG CONOCIDO — Sauce Demo permite completar una compra con carrito vacío
+    await inventarioPage.irAlCarrito();
+    await carritoPage.irAlCheckout();
+    await checkoutPage.llenarFormulario(
+      datosCheckout.valido.nombre,
+      datosCheckout.valido.apellido,
+      datosCheckout.valido.cp
+    );
+    await checkoutPage.clickContinuar();
+    await checkoutPage.validarResumenCargado();
+    await checkoutPage.validarItemTotal(resumenCarritoVacio.itemTotal);
+    await checkoutPage.validarImpuesto(resumenCarritoVacio.tax);
+    await checkoutPage.validarTotal(resumenCarritoVacio.total);
+    await checkoutPage.clickFinish();
+    await confirmacionPage.validarConfirmacionCompleta();
   });
 
   // ─────────────────────────────────────────────────────

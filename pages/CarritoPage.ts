@@ -59,4 +59,13 @@ export class CarritoPage {
     const item = this.page.locator('.cart_item').filter({ hasText: nombreProducto });
     await expect(item.locator('.inventory_item_price')).toHaveText(precioEsperado);
   }
+
+  async validarCarritoVacioVisible() {
+    const items = this.page.locator('.cart_item');
+    await expect(items).toHaveCount(0);
+  }
+
+  async validarBotonCheckoutVisible() {
+    await expect(this.botonCheckout).toBeVisible();
+  }
 }

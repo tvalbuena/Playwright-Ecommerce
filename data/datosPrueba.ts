@@ -91,3 +91,9 @@ export const mensajesError = {
   carritoSinAuth:    "You can only access '/cart.html' when you are logged in.",
   checkoutSinAuth:   "You can only access '/checkout-step-one.html' when you are logged in."
 };
+
+export const resumenCarritoVacio = {
+  itemTotal: 'Item total: $0',
+  tax:       'Tax: $0.00',
+  total:     'Total: $0.00'
+};

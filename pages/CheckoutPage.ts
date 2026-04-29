@@ -10,6 +10,7 @@ export class CheckoutPage {
   readonly botonContinuar: Locator;
   readonly botonCancelar: Locator;
   readonly mensajeError: Locator;
+  readonly botonCerrarError: Locator;
 
   // 🔹 Locators — Resumen
   readonly subtotal: Locator;
@@ -26,8 +27,9 @@ export class CheckoutPage {
     this.campoApellido  = page.getByTestId('lastName');
     this.campoCp        = page.getByTestId('postalCode');
     this.botonContinuar = page.getByTestId('continue');
-    this.botonCancelar  = page.locator('[data-test="cancel"]').nth(0);
-    this.mensajeError   = page.getByTestId('error');
+    this.botonCancelar    = page.locator('[data-test="cancel"]').nth(0);
+    this.mensajeError     = page.getByTestId('error');
+    this.botonCerrarError = page.getByTestId('error-button');
 
     // 🔹 Resumen
     this.subtotal            = page.getByTestId('subtotal-label');
@@ -160,5 +162,15 @@ export class CheckoutPage {
   // 🔹 Validar total exacto
   async validarTotal(totalEsperado: string) {
     await expect(this.total).toHaveText(totalEsperado);
+  }
+
+  // 🔹 Cerrar mensaje de error con botón X
+  async clickCerrarError() {
+    await this.botonCerrarError.click();
+  }
+
+  // 🔹 Validar que el mensaje de error desapareció
+  async validarErrorDesaparecio() {
+    await expect(this.mensajeError).not.toBeVisible();
   }
 }
