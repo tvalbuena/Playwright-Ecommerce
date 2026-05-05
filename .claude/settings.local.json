@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npx tsc *)",
       "WebFetch(domain:www.saucedemo.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(npx playwright *)"
     ]
   }
 }
