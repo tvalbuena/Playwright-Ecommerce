@@ -1,15 +1,15 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class DetalleProductoPage {
-  readonly page: Page;
+  private readonly page: Page;
 
   // 🔹 Locators
-  readonly nombreProducto: Locator;
-  readonly precioProducto: Locator;
-  readonly descripcionProducto: Locator;
-  readonly botonAddToCart: Locator;
-  readonly botonRemove: Locator;
-  readonly botonBackToProducts: Locator;
+  private readonly nombreProducto: Locator;
+  private readonly precioProducto: Locator;
+  private readonly descripcionProducto: Locator;
+  private readonly botonAddToCart: Locator;
+  private readonly botonRemove: Locator;
+  private readonly botonBackToProducts: Locator;
 
   constructor(page: Page) {
     this.page = page;

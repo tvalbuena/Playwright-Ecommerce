@@ -1,19 +1,19 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class InventarioPage {
-  readonly page: Page;
+  private readonly page: Page;
 
-  readonly contenedorInventario: Locator;
-  readonly iconoCarrito: Locator;
-  readonly contadorCarrito: Locator;
+  private readonly contenedorInventario: Locator;
+  private readonly iconoCarrito: Locator;
+  private readonly contadorCarrito: Locator;
 
   // 🔹 Menú hamburguesa
-  readonly botonMenu: Locator;
-  readonly botonCerrarMenu: Locator;
-  readonly menuLateral: Locator;
-  readonly enlaceAllItems: Locator;
-  readonly enlaceLogout: Locator;
-  readonly enlaceResetAppState: Locator;
+  private readonly botonMenu: Locator;
+  private readonly botonCerrarMenu: Locator;
+  private readonly menuLateral: Locator;
+  private readonly enlaceAllItems: Locator;
+  private readonly enlaceLogout: Locator;
+  private readonly enlaceResetAppState: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -117,5 +117,10 @@ export class InventarioPage {
 
   async validarMenuOculto() {
     await expect(this.menuLateral).toHaveAttribute('aria-hidden', 'true');
+  }
+
+  // 🔹 Navegar a una URL relativa (para tests de protección de rutas)
+  async navegarA(url: string) {
+    await this.page.goto(url);
   }
 }

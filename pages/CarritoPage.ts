@@ -1,10 +1,10 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class CarritoPage {
-  readonly page: Page;
+  private readonly page: Page;
 
-  readonly botonContinuarComprando: Locator;
-  readonly botonCheckout: Locator;
+  private readonly botonContinuarComprando: Locator;
+  private readonly botonCheckout: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -67,5 +67,10 @@ export class CarritoPage {
 
   async validarBotonCheckoutVisible() {
     await expect(this.botonCheckout).toBeVisible();
+  }
+
+  // 🔹 Validar que el botón Continuar Comprando está visible
+  async validarBotonContinuarComprandoVisible() {
+    await expect(this.botonContinuarComprando).toBeVisible();
   }
 }

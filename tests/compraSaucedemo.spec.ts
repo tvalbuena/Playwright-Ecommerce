@@ -179,8 +179,8 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await inventarioPage.abrirMenu();
     await inventarioPage.clickLogout();
     await loginPage.validarPermanenceEnLogin();
-    await expect(loginPage.botonLogin).toBeVisible();
-    await inventarioPage.page.goto('/inventory.html');
+    await loginPage.validarBotonLoginVisible();
+    await inventarioPage.navegarA('/inventory.html');
     await loginPage.validarPermanenceEnLogin();
   });
 
@@ -436,7 +436,7 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
     await carritoPage.validarCarritoCargado();
     await carritoPage.validarCarritoVacioVisible();
     await carritoPage.validarBotonCheckoutVisible();
-    await expect(carritoPage.botonContinuarComprando).toBeVisible();
+    await carritoPage.validarBotonContinuarComprandoVisible();
   });
 
   // ─────────────────────────────────────────────────────
@@ -507,7 +507,7 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   // CP-030 — Acceder a inventario sin autenticación
   // ─────────────────────────────────────────────────────
   test('CP-030 - Acceder a inventario sin autenticación redirige al login', async ({ loginPage }) => {
-    await loginPage.page.goto('/inventory.html');
+    await loginPage.navegarA('/inventory.html');
     await loginPage.validarPermanenceEnLogin();
     await loginPage.validarMensajeError(mensajesError.inventarioSinAuth);
   });
@@ -516,7 +516,7 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   // CP-031 — Acceder al carrito sin autenticación
   // ─────────────────────────────────────────────────────
   test('CP-031 - Acceder al carrito sin autenticación redirige al login', async ({ loginPage }) => {
-    await loginPage.page.goto('/cart.html');
+    await loginPage.navegarA('/cart.html');
     await loginPage.validarPermanenceEnLogin();
     await loginPage.validarMensajeError(mensajesError.carritoSinAuth);
   });
@@ -525,7 +525,7 @@ test.describe('Sauce Demo — Flujo E2E Ecommerce', () => {
   // CP-032 — Acceder al checkout sin autenticación
   // ─────────────────────────────────────────────────────
   test('CP-032 - Acceder al checkout sin autenticación redirige al login', async ({ loginPage }) => {
-    await loginPage.page.goto('/checkout-step-one.html');
+    await loginPage.navegarA('/checkout-step-one.html');
     await loginPage.validarPermanenceEnLogin();
     await loginPage.validarMensajeError(mensajesError.checkoutSinAuth);
   });

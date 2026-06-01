@@ -1,13 +1,13 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class ConfirmacionPage {
-  readonly page: Page;
+  private readonly page: Page;
 
   // 🔹 Locators
-  readonly contenedorConfirmacion: Locator;
-  readonly mensajeConfirmacion: Locator;
-  readonly mensajeSecundario: Locator;
-  readonly botonBackHome: Locator;
+  private readonly contenedorConfirmacion: Locator;
+  private readonly mensajeConfirmacion: Locator;
+  private readonly mensajeSecundario: Locator;
+  private readonly botonBackHome: Locator;
 
   constructor(page: Page) {
     this.page = page;

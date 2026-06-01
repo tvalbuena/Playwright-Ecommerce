@@ -1,14 +1,14 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class LoginPage {
-  readonly page: Page;
+  private readonly page: Page;
 
   // 🔹 Locators
-  readonly campoUsuario: Locator;
-  readonly campoPassword: Locator;
-  readonly botonLogin: Locator;
-  readonly mensajeError: Locator;
-  readonly botonCerrarError: Locator;
+  private readonly campoUsuario: Locator;
+  private readonly campoPassword: Locator;
+  private readonly botonLogin: Locator;
+  private readonly mensajeError: Locator;
+  private readonly botonCerrarError: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -58,5 +58,15 @@ export class LoginPage {
   // 🔹 Validar que el mensaje de error desapareció
   async validarErrorDesaparecio() {
     await expect(this.mensajeError).not.toBeVisible();
+  }
+
+  // 🔹 Validar que el botón de login está visible
+  async validarBotonLoginVisible() {
+    await expect(this.botonLogin).toBeVisible();
+  }
+
+  // 🔹 Navegar a una URL relativa (para tests de protección de rutas)
+  async navegarA(url: string) {
+    await this.page.goto(url);
   }
 }

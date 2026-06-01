@@ -5,7 +5,10 @@
       "WebFetch(domain:www.saucedemo.com)",
       "WebSearch",
       "Bash(npx playwright *)",
-      "Bash(npm test *)"
+      "Bash(npm test *)",
+      "Bash(Get-Content tests\\\\compraSaucedemo.spec.ts)",
+      "Bash(Select-String -Pattern \"\\\\.\\(campo|boton|icono|contador|menu|enlace|contenedor|mensaje|subtotal|impuesto|total|nombre|precio|descripcion\\)\")",
+      "Bash(Select-Object -Property LineNumber, Line)"
     ]
   }
 }

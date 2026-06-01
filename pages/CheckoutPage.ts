@@ -1,23 +1,23 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class CheckoutPage {
-  readonly page: Page;
+  private readonly page: Page;
 
   // 🔹 Locators — Formulario
-  readonly campoNombre: Locator;
-  readonly campoApellido: Locator;
-  readonly campoCp: Locator;
-  readonly botonContinuar: Locator;
-  readonly botonCancelar: Locator;
-  readonly mensajeError: Locator;
-  readonly botonCerrarError: Locator;
+  private readonly campoNombre: Locator;
+  private readonly campoApellido: Locator;
+  private readonly campoCp: Locator;
+  private readonly botonContinuar: Locator;
+  private readonly botonCancelar: Locator;
+  private readonly mensajeError: Locator;
+  private readonly botonCerrarError: Locator;
 
   // 🔹 Locators — Resumen
-  readonly subtotal: Locator;
-  readonly impuesto: Locator;
-  readonly total: Locator;
-  readonly botonFinish: Locator;
-  readonly botonCancelarResumen: Locator;
+  private readonly subtotal: Locator;
+  private readonly impuesto: Locator;
+  private readonly total: Locator;
+  private readonly botonFinish: Locator;
+  private readonly botonCancelarResumen: Locator;
 
   constructor(page: Page) {
     this.page = page;
