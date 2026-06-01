@@ -52,12 +52,12 @@ export class CarritoPage {
   }
 
   async clickNombreProducto(nombre: string) {
-    await this.page.locator('.inventory_item_name').getByText(nombre).click();
+    await this.page.getByTestId('inventory-item-name').getByText(nombre).click();
   }
 
   async validarPrecioProducto(nombreProducto: string, precioEsperado: string) {
     const item = this.page.locator('.cart_item').filter({ hasText: nombreProducto });
-    await expect(item.locator('.inventory_item_price')).toHaveText(precioEsperado);
+    await expect(item.getByTestId('inventory-item-price')).toHaveText(precioEsperado);
   }
 
   async validarCarritoVacioVisible() {

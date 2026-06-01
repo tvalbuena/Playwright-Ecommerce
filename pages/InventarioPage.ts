@@ -20,14 +20,14 @@ export class InventarioPage {
 
     this.contenedorInventario = page.getByTestId('inventory-container');
     this.iconoCarrito         = page.getByTestId('shopping-cart-link');
-    this.contadorCarrito      = page.locator('.shopping_cart_badge');
+    this.contadorCarrito      = page.getByTestId('shopping-cart-badge');
 
     this.botonMenu           = page.locator('#react-burger-menu-btn');
     this.botonCerrarMenu     = page.locator('#react-burger-cross-btn');
     this.menuLateral         = page.locator('.bm-menu-wrap');
-    this.enlaceAllItems      = page.locator('#inventory_sidebar_link');
-    this.enlaceLogout        = page.locator('#logout_sidebar_link');
-    this.enlaceResetAppState = page.locator('#reset_sidebar_link');
+    this.enlaceAllItems      = page.getByTestId('inventory-sidebar-link');
+    this.enlaceLogout        = page.getByTestId('logout-sidebar-link');
+    this.enlaceResetAppState = page.getByTestId('reset-sidebar-link');
   }
 
   private slug(nombre: string): string {
@@ -67,27 +67,27 @@ export class InventarioPage {
   }
 
   async clickNombreProducto(nombre: string) {
-    await this.page.locator('.inventory_item_name').getByText(nombre).click();
+    await this.page.getByTestId('inventory-item-name').getByText(nombre).click();
   }
 
   async seleccionarFiltro(opcion: string) {
-    await this.page.locator('.product_sort_container').selectOption({ label: opcion });
+    await this.page.getByTestId('product-sort-container').selectOption({ label: opcion });
   }
 
   async obtenerPrimerNombreProducto(): Promise<string> {
-    return (await this.page.locator('.inventory_item_name').first().textContent()) || '';
+    return (await this.page.getByTestId('inventory-item-name').first().textContent()) || '';
   }
 
   async obtenerUltimoNombreProducto(): Promise<string> {
-    return (await this.page.locator('.inventory_item_name').last().textContent()) || '';
+    return (await this.page.getByTestId('inventory-item-name').last().textContent()) || '';
   }
 
   async obtenerPrimerPrecioProducto(): Promise<string> {
-    return (await this.page.locator('.inventory_item_price').first().textContent()) || '';
+    return (await this.page.getByTestId('inventory-item-price').first().textContent()) || '';
   }
 
   async obtenerUltimoPrecioProducto(): Promise<string> {
-    return (await this.page.locator('.inventory_item_price').last().textContent()) || '';
+    return (await this.page.getByTestId('inventory-item-price').last().textContent()) || '';
   }
 
   // 🔹 Menú hamburguesa

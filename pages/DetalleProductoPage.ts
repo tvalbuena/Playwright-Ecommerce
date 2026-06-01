@@ -14,9 +14,9 @@ export class DetalleProductoPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.nombreProducto      = page.locator('.inventory_details_name');
-    this.precioProducto      = page.locator('.inventory_details_price');
-    this.descripcionProducto = page.locator('.inventory_details_desc');
+    this.nombreProducto      = page.getByTestId('inventory-item-name');
+    this.precioProducto      = page.getByTestId('inventory-item-price');
+    this.descripcionProducto = page.getByTestId('inventory-item-desc');
     this.botonAddToCart      = page.locator('[data-test^="add-to-cart"]');
     this.botonRemove         = page.getByTestId('remove');
     this.botonBackToProducts = page.getByTestId('back-to-products');

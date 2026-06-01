@@ -27,7 +27,7 @@ export class CheckoutPage {
     this.campoApellido  = page.getByTestId('lastName');
     this.campoCp        = page.getByTestId('postalCode');
     this.botonContinuar = page.getByTestId('continue');
-    this.botonCancelar    = page.locator('[data-test="cancel"]').nth(0);
+    this.botonCancelar    = page.getByTestId('cancel');
     this.mensajeError     = page.getByTestId('error');
     this.botonCerrarError = page.getByTestId('error-button');
 
@@ -36,7 +36,7 @@ export class CheckoutPage {
     this.impuesto            = page.getByTestId('tax-label');
     this.total               = page.getByTestId('total-label');
     this.botonFinish         = page.getByTestId('finish');
-    this.botonCancelarResumen = page.locator('[data-test="cancel"]').first();
+    this.botonCancelarResumen = page.getByTestId('cancel');
   }
 
   // 🔹 Validar que el formulario cargó
@@ -130,13 +130,13 @@ export class CheckoutPage {
 
   // 🔹 Navegar al detalle desde el resumen
   async clickNombreProductoEnResumen(nombre: string) {
-    await this.page.locator('.inventory_item_name').getByText(nombre).click();
+    await this.page.getByTestId('inventory-item-name').getByText(nombre).click();
   }
 
   // 🔹 Validar precio de producto en resumen
   async validarPrecioProductoEnResumen(nombreProducto: string, precioEsperado: string) {
     const item = this.page.locator('.cart_item').filter({ hasText: nombreProducto });
-    await expect(item.locator('.inventory_item_price')).toHaveText(precioEsperado);
+    await expect(item.getByTestId('inventory-item-price')).toHaveText(precioEsperado);
   }
 
   // 🔹 Validar Payment Information

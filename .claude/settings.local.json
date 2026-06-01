@@ -4,7 +4,8 @@
       "Bash(npx tsc *)",
       "WebFetch(domain:www.saucedemo.com)",
       "WebSearch",
-      "Bash(npx playwright *)"
+      "Bash(npx playwright *)",
+      "Bash(npm test *)"
     ]
   }
 }

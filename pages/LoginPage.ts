@@ -12,10 +12,9 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-
-    this.campoUsuario    = page.locator('#user-name');
-    this.campoPassword   = page.locator('#password');
-    this.botonLogin      = page.locator('#login-button');
+    this.campoUsuario    = page.getByTestId('username');
+    this.campoPassword   = page.getByTestId('password');
+    this.botonLogin      = page.getByTestId('login-button');
     this.mensajeError    = page.getByTestId('error');
     this.botonCerrarError = page.getByTestId('error-button');
   }
