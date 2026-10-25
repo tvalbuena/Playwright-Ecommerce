@@ -111,12 +111,14 @@ export class InventarioPage {
     await this.enlaceResetAppState.click();
   }
 
-  async validarMenuVisible() {
+    async validarMenuVisible() {
     await expect(this.menuLateral).toHaveAttribute('aria-hidden', 'false');
+    await expect(this.botonCerrarMenu).toBeVisible();
   }
 
   async validarMenuOculto() {
     await expect(this.menuLateral).toHaveAttribute('aria-hidden', 'true');
+    await expect(this.botonCerrarMenu).toBeHidden();
   }
 
   // 🔹 Navegar a una URL relativa (para tests de protección de rutas)
